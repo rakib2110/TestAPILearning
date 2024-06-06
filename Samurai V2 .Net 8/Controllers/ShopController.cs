@@ -17,20 +17,20 @@ namespace Samurai_V2_.Net_8.Controllers
     {
         private readonly IShop _shop;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public ShopController(IShop shop,IWebHostEnvironment webHostEnvironment)
+        public ShopController(IShop shop, IWebHostEnvironment webHostEnvironment)
         {
             _shop = shop;
             _webHostEnvironment = webHostEnvironment;
         }
 
-[HttpPost]
-[Route("CreateItem")]
-public async Task<IActionResult> CreateNew([FromForm] ItemDto itemDto)
-{
-    if (itemDto == null)
-    {
-        return BadRequest(new { message = "ItemDto is required." });
-    }
+        [HttpPost]
+        [Route("CreateItem")]
+        public async Task<IActionResult> CreateNew([FromForm] ItemDto itemDto)
+        {
+            if (itemDto == null)
+            {
+                return BadRequest(new { message = "ItemDto is required." });
+            }
             string imagePath = null;
 
             if (itemDto.ImageUrl != null && itemDto.ImageUrl.Length > 0)
@@ -68,14 +68,46 @@ public async Task<IActionResult> CreateNew([FromForm] ItemDto itemDto)
                 var result = await _shop.CreateItem(itemDto, imagePath);
                 return StatusCode(StatusCodes.Status201Created, result);
             }
-    catch (Exception ex)
-    {
-        // Log the exception (not implemented here)
-        return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while creating the item.", detail = ex.Message });
-    }
-}
+            catch (Exception ex)
+            {
+                // Log the exception (not implemented here)
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while creating the item.", detail = ex.Message });
+            }
+        }
+        [HttpGet]
+        [Route("GetItems")]
+        public async Task<IActionResult> GetItems(int id)
+        {
+            var response= await _shop.GetItems(id);
+            if(response.Count()==0)
+            {
+                return StatusCode(StatusCodes.Status404NotFound,"Data not found");
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
 
+        [HttpPost]
+        [Route("GetAllItems")]
+        public async Task<IActionResult> GetAllItems([FromBody] ItemsDto itemsDto)
+        {
+            if (itemsDto == null)
+            {
+                return BadRequest(new { message = "ItemsDto is required" });
+            }
+            try
+            {
+                var result = await _shop.GetAllItems(itemsDto);
+                return StatusCode(StatusCodes.Status302Found, result);
 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
         [HttpPost]
         [Route("CreateSale")]
         public async Task<IActionResult> CreateNew(SaleDto saleDto)

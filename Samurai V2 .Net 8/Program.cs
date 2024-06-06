@@ -67,7 +67,7 @@ else
     });
 }
 
-
+app.UseCors("AllowSpecificOrigin");
 app.UseHttpsRedirection();
 app.UseCors("Open");
 app.UseStaticFiles();

@@ -5,6 +5,7 @@ using Samurai_V2_.Net_8.DbContexts;
 using Samurai_V2_.Net_8.DbContexts.Models;
 using Samurai_V2_.Net_8.DTOs;
 using Samurai_V2_.Net_8.IRepository;
+using System.Text;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Samurai_V2_.Net_8.Repository
@@ -61,7 +62,71 @@ namespace Samurai_V2_.Net_8.Repository
             return message;
         }
 
+        public async Task<List<ItemsDto>> GetItems(int id)
+        {
 
+            var items = await (from a in _context.TblItems
+                              where a.ItemId == id &&
+                              a.IsActive == true
+                              select new ItemsDto
+                              {
+                                  ItemId = a.ItemId,
+                                  ItemName = a.ItemName,
+                                  StockQuantity = a.StockQuantity,
+                                  ImageUrl = a.ImageUrl,
+                                  IsActive = a.IsActive,
+
+                              }).ToListAsync();
+            // Convert ImageUrl to IFormFile
+            foreach (var item in items)
+            {
+                if (!string.IsNullOrEmpty(item.ImageUrl))
+                {
+                    item.ImageFile =ConvertStringToIFormFile(item.ImageUrl, item.ItemId.ToString());
+                }
+            }
+            return items;
+
+
+        }
+
+        private IFormFile ConvertStringToIFormFile(string imageUrl, string ImageFile)
+        {
+            byte[] byteArray = Encoding.UTF8.GetBytes(imageUrl);
+            MemoryStream stream = new MemoryStream(byteArray);
+
+            IFormFile formFile = new FormFile(stream, 0, stream.Length, "file", ImageFile)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "text/plain"
+            };
+
+            return formFile;
+        }
+
+        public async Task<List<ItemsDto>> GetAllItems(ItemsDto itemsDto)
+        {
+            var items = await (from a in _context.TblItems
+                               where a.ItemId == itemsDto.ItemId && a.IsActive == itemsDto.IsActive
+                               select new ItemsDto
+                               {
+                                   ItemId= a.ItemId,
+                                   ItemName=a.ItemName,
+                                   StockQuantity= a.StockQuantity,
+                                   ImageUrl= a.ImageUrl,
+                                    IsActive= a.IsActive,
+                               }).ToListAsync();
+            // Convert ImageUrl to IFormFile
+            foreach (var item in items)
+            {
+                if (!string.IsNullOrEmpty(item.ImageUrl))
+                {
+                    item.ImageFile = ConvertStringToIFormFile(item.ImageUrl, item.ItemId.ToString());
+                }
+            }
+            return items;
+                             
+        }
         public async Task<string> CreateSale(SaleDto saleDto)
         {
             string message = "";

@@ -9,11 +9,13 @@ public partial class ShopSystemDbContext : DbContext
 {
     public ShopSystemDbContext()
     {
+
     }
 
     public ShopSystemDbContext(DbContextOptions<ShopSystemDbContext> options)
         : base(options)
     {
+
     }
 
     public virtual DbSet<TblItem> TblItems { get; set; }
