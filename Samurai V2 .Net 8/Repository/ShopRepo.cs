@@ -104,18 +104,18 @@ namespace Samurai_V2_.Net_8.Repository
             return formFile;
         }
 
-        public async Task<List<ItemsDto>> GetAllItems(ItemsDto itemsDto)
+        public async Task<List<ItemsDto>> GetAllItems()
         {
             var items = await (from a in _context.TblItems
-                               where a.ItemId == itemsDto.ItemId && a.IsActive == itemsDto.IsActive
                                select new ItemsDto
                                {
-                                   ItemId= a.ItemId,
-                                   ItemName=a.ItemName,
-                                   StockQuantity= a.StockQuantity,
-                                   ImageUrl= a.ImageUrl,
-                                    IsActive= a.IsActive,
+                                   ItemId = a.ItemId,
+                                   ItemName = a.ItemName,
+                                   StockQuantity = a.StockQuantity,
+                                   ImageUrl = a.ImageUrl,
+                                   IsActive = a.IsActive,
                                }).ToListAsync();
+
             // Convert ImageUrl to IFormFile
             foreach (var item in items)
             {
@@ -125,8 +125,8 @@ namespace Samurai_V2_.Net_8.Repository
                 }
             }
             return items;
-                             
         }
+
         public async Task<string> CreateSale(SaleDto saleDto)
         {
             string message = "";

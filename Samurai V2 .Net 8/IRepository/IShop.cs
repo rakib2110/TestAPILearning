@@ -7,7 +7,7 @@ namespace Samurai_V2_.Net_8.IRepository
     {
         Task <string> CreateItem(ItemDto itemDto, string imagePath);
         Task<List<ItemsDto>> GetItems(int id);
-        Task<List<ItemsDto>> GetAllItems(ItemsDto itemsDto);
+        Task<List<ItemsDto>> GetAllItems();
         Task<string> CreateSale(SaleDto saleDto);
         Task<List<PurchaseReportDto>> GetDailyPurchaseDetails(PurchaseReportDto purchaseReportDto);
     }

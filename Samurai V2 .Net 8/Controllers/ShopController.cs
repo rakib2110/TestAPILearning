@@ -89,18 +89,14 @@ namespace Samurai_V2_.Net_8.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetAllItems")]
-        public async Task<IActionResult> GetAllItems([FromBody] ItemsDto itemsDto)
+        public async Task<IActionResult> GetAllItems()
         {
-            if (itemsDto == null)
-            {
-                return BadRequest(new { message = "ItemsDto is required" });
-            }
             try
             {
-                var result = await _shop.GetAllItems(itemsDto);
-                return StatusCode(StatusCodes.Status302Found, result);
+                var result = await _shop.GetAllItems();
+                return Ok(result);
 
             }
             catch (Exception ex)

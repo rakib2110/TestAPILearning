@@ -1,4 +1,5 @@
-﻿using Samurai_V2_.Net_8.IRepository;
+﻿using Microsoft.Extensions.FileProviders;
+using Samurai_V2_.Net_8.IRepository;
 using Samurai_V2_.Net_8.Repository;
 
 namespace Samurai_V2_.Net_8.DependencyContainer
@@ -20,7 +21,7 @@ namespace Samurai_V2_.Net_8.DependencyContainer
                 options.AddPolicy("AllowSpecificOrigin",
                     builder =>
                     {
-                        builder.WithOrigins("http://127.0.0.1:5500") // Replace with your frontend URL
+                        builder.WithOrigins("http://127.0.0.1:5500/") // Replace with your frontend URL
                                .AllowAnyHeader()
                                .AllowAnyMethod();
                     });
@@ -31,7 +32,17 @@ namespace Samurai_V2_.Net_8.DependencyContainer
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // Other configurations
+            app.UseStaticFiles(); // For the wwwroot folder
+
+            // Configure serving static files from other folders
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(env.ContentRootPath, "images")),
+                RequestPath = "/images"
+            });
+
+            // Other configurations...
             app.UseCors("AllowSpecificOrigin");
             app.UseRouting();
             app.UseAuthorization();
