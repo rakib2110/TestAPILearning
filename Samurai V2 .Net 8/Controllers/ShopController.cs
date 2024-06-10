@@ -34,7 +34,7 @@ namespace Samurai_V2_.Net_8.Controllers
             }
             else
             {
-                return Ok(new {token = tokenResponse.Token });//,expiration=tokenResponse.Expiration
+                return Ok(new {token = tokenResponse.Token, expiration = tokenResponse.Expiration });//,expiration=tokenResponse.Expiration
             }
         }
         [Authorize]
@@ -42,6 +42,7 @@ namespace Samurai_V2_.Net_8.Controllers
         [Route("VerifyToken")]
         public IActionResult VerifyToken()
         {
+
             return Ok(new { message = "Token is valid" });
         }
 

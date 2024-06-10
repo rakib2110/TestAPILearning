@@ -14,7 +14,7 @@ public partial class TblPurchase
 
     public int SupplierId { get; set; }
 
-    public DateOnly PurchaseDate { get; set; }
+    public DateTime PurchaseDate { get; set; }
 
     public bool IsActive { get; set; }
 }
