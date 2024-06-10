@@ -33,7 +33,7 @@ namespace Samurai_V2_.Net_8.Controllers
             }
             else
             {
-                return Ok(new { message = "Login Successfully", token = tokenResponse.Token });//,expiration=tokenResponse.Expiration
+                return Ok(new {token = tokenResponse.Token });//,expiration=tokenResponse.Expiration
             }
         }
 

@@ -101,9 +101,8 @@ internal class Program
         app.UseCors("Open");
         app.UseStaticFiles();
         app.UseRouting();
-        //app.UseAuthentication();
+        app.UseAuthentication();
         app.UseAuthorization();
-
         app.MapControllers();
 
         app.Run();
