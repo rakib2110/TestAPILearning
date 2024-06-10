@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -35,6 +36,13 @@ namespace Samurai_V2_.Net_8.Controllers
             {
                 return Ok(new {token = tokenResponse.Token });//,expiration=tokenResponse.Expiration
             }
+        }
+        [Authorize]
+        [HttpGet]
+        [Route("VerifyToken")]
+        public IActionResult VerifyToken()
+        {
+            return Ok(new { message = "Token is valid" });
         }
 
         [HttpPost]

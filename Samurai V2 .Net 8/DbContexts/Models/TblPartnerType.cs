@@ -16,4 +16,7 @@ public partial class TblPartnerType
     public string PartnerTypeName { get; set; } = null!;
 
     public bool IsActive { get; set; }
+
+    [InverseProperty("PartnerType")]
+    public virtual ICollection<TblPartner> TblPartners { get; set; } = new List<TblPartner>();
 }

@@ -18,4 +18,8 @@ public partial class TblPartner
     public int PartnerTypeId { get; set; }
 
     public bool IsActive { get; set; }
+
+    [ForeignKey("PartnerTypeId")]
+    [InverseProperty("TblPartners")]
+    public virtual TblPartnerType PartnerType { get; set; } = null!;
 }

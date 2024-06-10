@@ -9,16 +9,16 @@ public partial class ShopSystemDbContext : DbContext
 {
     public ShopSystemDbContext()
     {
-
     }
 
     public ShopSystemDbContext(DbContextOptions<ShopSystemDbContext> options)
         : base(options)
     {
-
     }
 
     public virtual DbSet<TblItem> TblItems { get; set; }
+
+    public virtual DbSet<TblLogin> TblLogins { get; set; }
 
     public virtual DbSet<TblPartner> TblPartners { get; set; }
 
@@ -33,15 +33,18 @@ public partial class ShopSystemDbContext : DbContext
     public virtual DbSet<TblSalesDetail> TblSalesDetails { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlServer("Data Source=DESKTOP-4KCTB07;Initial Catalog=ShopSystem;Integrated Security=True;Trust Server Certificate=True");
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-4KCTB07;Initial Catalog=ShopSystem;Integrated Security=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TblPartner>(entity =>
         {
             entity.HasKey(e => e.PartnerId).HasName("PK_Partner");
+
+            entity.HasOne(d => d.PartnerType).WithMany(p => p.TblPartners)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_tblPartner_tblPartnerType");
         });
 
         OnModelCreatingPartial(modelBuilder);

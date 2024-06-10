@@ -38,7 +38,7 @@ namespace Samurai_V2_.Net_8.Repository
                     {
                 new Claim(ClaimTypes.Name, loginDto.Username)
                     }),
-                    Expires = DateTime.Now.AddMinutes(1),
+                    Expires = DateTime.Now.AddMinutes(30),
                     Issuer = _configuration["Jwt:Issuer"],
                     Audience = _configuration["Jwt:Audience"],
                     SigningCredentials = credentials

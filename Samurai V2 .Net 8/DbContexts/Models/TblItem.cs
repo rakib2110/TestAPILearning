@@ -17,7 +17,8 @@ public partial class TblItem
 
     public int StockQuantity { get; set; }
 
-    public string ImageUrl { get; set; }
+    [StringLength(50)]
+    public string ImageUrl { get; set; } = null!;
 
-    public bool? IsActive { get; set; }
+    public bool IsActive { get; set; }
 }
