@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
 using Samurai_V2_.Net_8.DbContexts;
 using Samurai_V2_.Net_8.DbContexts.Models;
 using Samurai_V2_.Net_8.DTOs;
 using Samurai_V2_.Net_8.IRepository;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -13,10 +16,46 @@ namespace Samurai_V2_.Net_8.Repository
     public class ShopRepo : IShop
     {
         private ShopSystemDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public ShopRepo(ShopSystemDbContext contex)
+        public ShopRepo(ShopSystemDbContext contex, IConfiguration configuration)
         {
            _context = contex;
+           _configuration = configuration;
+        }
+        public async Task<TokenResponseDto> Authenticate(LoginDto loginDto)
+        {
+            // Replace with your actual user validation logic
+            if (loginDto.Username == "rakib" && loginDto.Password == "2110")
+            {
+                var key = _configuration["Jwt:Key"];
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                new Claim(ClaimTypes.Name, loginDto.Username)
+                    }),
+                    Expires = DateTime.Now.AddMinutes(1),
+                    Issuer = _configuration["Jwt:Issuer"],
+                    Audience = _configuration["Jwt:Audience"],
+                    SigningCredentials = credentials
+                };
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var tokenString = tokenHandler.WriteToken(token);
+
+                return new TokenResponseDto
+                {
+                    Token = tokenString,
+                    Expiration = tokenDescriptor.Expires.Value
+                };
+            }
+            return null;
+
         }
         public async Task<string> CreateItem(ItemDto itemDto, string imagePath)
         {

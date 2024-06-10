@@ -5,6 +5,7 @@ namespace Samurai_V2_.Net_8.IRepository
 {
     public interface IShop
     {
+        Task<TokenResponseDto> Authenticate(LoginDto loginDto);
         Task <string> CreateItem(ItemDto itemDto, string imagePath);
         Task<List<ItemsDto>> GetItems(int id);
         Task<List<ItemsDto>> GetAllItems();

@@ -22,6 +22,20 @@ namespace Samurai_V2_.Net_8.Controllers
             _shop = shop;
             _webHostEnvironment = webHostEnvironment;
         }
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        {
+            var tokenResponse = await _shop.Authenticate(loginDto);
+            if (tokenResponse == null)
+            {
+                return Unauthorized(new { message = "Invalid username or password" });
+            }
+            else
+            {
+                return Ok(new { message = "Login Successfully", token = tokenResponse.Token });//,expiration=tokenResponse.Expiration
+            }
+        }
 
         [HttpPost]
         [Route("CreateItem")]
