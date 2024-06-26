@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Samurai_V2_.Net_8.IRepository;
 using Samurai_V2_.Net_8.Repository;
 using System.Collections;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.InteropServices;
 
 namespace Samurai_V2_.Net_8.Controllers
 {
@@ -34,7 +36,7 @@ namespace Samurai_V2_.Net_8.Controllers
             }
             else
             {
-                return Ok(new {token = tokenResponse.Token, expiration = tokenResponse.Expiration });//,expiration=tokenResponse.Expiration
+                return Ok(new { token = tokenResponse.Token, expiration = tokenResponse.Expiration });//,expiration=tokenResponse.Expiration
             }
         }
         [Authorize]
@@ -101,10 +103,10 @@ namespace Samurai_V2_.Net_8.Controllers
         [Route("GetItems")]
         public async Task<IActionResult> GetItems(int id)
         {
-            var response= await _shop.GetItems(id);
-            if(response.Count()==0)
+            var response = await _shop.GetItems(id);
+            if (response.Count() == 0)
             {
-                return StatusCode(StatusCodes.Status404NotFound,"Data not found");
+                return StatusCode(StatusCodes.Status404NotFound, "Data not found");
             }
             else
             {
@@ -125,6 +127,21 @@ namespace Samurai_V2_.Net_8.Controllers
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("StoreProcedureByID")]
+        public async Task<ActionResult<List<ItemDto>>> GetItemById(int itemId)
+        {
+            var response = await _shop.GetItemById(itemId);
+            if (response.Count == 0)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, "Data not found");
+            }
+            else
+            {
+                return Ok(response);
             }
         }
         [HttpPost]

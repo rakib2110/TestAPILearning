@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
@@ -166,6 +167,24 @@ namespace Samurai_V2_.Net_8.Repository
             return items;
         }
 
+        public async Task<List<SPItemDto>> GetItemById(int itemId)
+        {
+            var items = new SqlParameter("@ItemId", itemId);
+
+            var result = await _context.TblItems
+                .FromSqlRaw("EXECUTE GetItemById @ItemId", items)
+                .Select(item => new SPItemDto
+                {
+                    ItemId = item.ItemId,
+                    ItemName = item.ItemName,
+                    StockQuantity = item.StockQuantity,
+                    ImageUrl = item.ImageUrl,
+                    IsActive = item.IsActive
+                })
+                .ToListAsync();
+
+            return result;
+        }
         public async Task<string> CreateSale(SaleDto saleDto)
         {
             string message = "";
