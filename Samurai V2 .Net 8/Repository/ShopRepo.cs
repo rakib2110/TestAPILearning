@@ -286,7 +286,7 @@ namespace Samurai_V2_.Net_8.Repository
 
         public async Task<List<SaleDto>>GetSaleById(int itemID)
         {
-
+            return null;
         }
         public async  Task<List<PurchaseReportDto>> GetDailyPurchaseDetails(PurchaseReportDto purchaseReportDto)
         {
