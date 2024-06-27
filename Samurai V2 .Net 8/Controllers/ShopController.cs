@@ -132,16 +132,46 @@ namespace Samurai_V2_.Net_8.Controllers
 
         [HttpGet]
         [Route("StoreProcedureByID")]
-        public async Task<ActionResult<List<ItemDto>>> GetItemById(int itemId)
+        public async Task<IActionResult> GetItemById(int itemId)
         {
-            var response = await _shop.GetItemById(itemId);
-            if (response.Count == 0)
+            try
             {
-                return StatusCode(StatusCodes.Status404NotFound, "Data not found");
+                var response = await _shop.GetItemById(itemId);
+                if (response.Count == 0)
+                {
+                    return NotFound($"Product details not found by{itemId}");
+                }
+                else
+                {
+                    return Ok(response);
+                }
             }
-            else
+            catch (Exception e)
             {
-                return Ok(response);
+
+                return BadRequest(e.Message);
+            }
+        }
+        [HttpDelete]
+        [Route("DeleteById")]
+        public async Task<IActionResult>DeleteByID(int itemID)
+        {
+            try
+            {
+                var response = await _shop.DeleteById(itemID);
+                if (response.Count == 0)
+                {
+                    return NotFound($"Product details not found by{itemID}");
+                }
+                else
+                {
+                    return Ok(response);
+                }
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
             }
         }
         [HttpPost]

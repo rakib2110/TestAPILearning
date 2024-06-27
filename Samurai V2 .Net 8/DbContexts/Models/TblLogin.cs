@@ -18,5 +18,5 @@ public partial class TblLogin
 
     public string Token { get; set; } = null!;
 
-    public DateTime Expiration { get; set; }
+    public DateOnly Expiration { get; set; }
 }

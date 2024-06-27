@@ -7,9 +7,10 @@ namespace Samurai_V2_.Net_8.DbContexts;
 
 public partial class ShopSystemDbContext : DbContext
 {
-    public ShopSystemDbContext(DbContextOptions<ShopSystemDbContext> options): base(options)
-    {
 
+    public ShopSystemDbContext(DbContextOptions<ShopSystemDbContext> options)
+        : base(options)
+    {
     }
 
     public virtual DbSet<TblItem> TblItems { get; set; }

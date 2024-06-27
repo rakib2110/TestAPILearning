@@ -173,17 +173,40 @@ namespace Samurai_V2_.Net_8.Repository
 
             var result = await _context.TblItems
                 .FromSqlRaw("EXECUTE GetItemById @ItemId", items)
-                .Select(item => new SPItemDto
-                {
-                    ItemId = item.ItemId,
-                    ItemName = item.ItemName,
-                    StockQuantity = item.StockQuantity,
-                    ImageUrl = item.ImageUrl,
-                    IsActive = item.IsActive
-                })
+                .AsNoTracking()
                 .ToListAsync();
 
-            return result;
+            var dtoList = result.Select(item => new SPItemDto
+            {
+                ItemId = item.ItemId,
+                ItemName = item.ItemName,
+                StockQuantity = item.StockQuantity,
+                ImageUrl = item.ImageUrl,
+                IsActive = item.IsActive
+            }).ToList();
+
+            return dtoList;
+        }
+        public async Task<List<SPItemDto>> DeleteById(int itemID)
+        {
+            var items = new SqlParameter("@ItemId",itemID);
+
+            // Execute the stored procedure to delete the item
+            var result = await _context.TblItems.FromSqlRaw("EXECUTE DeleteById @ItemId", items)
+                .AsNoTracking().ToListAsync();
+                // After deletion, get the updated list of items
+                var dtolist =result
+                    .Select(item => new SPItemDto
+                    {
+                        ItemId = item.ItemId,
+                        ItemName = item.ItemName,
+                        StockQuantity = item.StockQuantity,
+                        ImageUrl = item.ImageUrl,
+                        IsActive = item.IsActive
+                    })
+                    .ToList();
+
+                return dtolist;
         }
         public async Task<string> CreateSale(SaleDto saleDto)
         {
@@ -261,6 +284,10 @@ namespace Samurai_V2_.Net_8.Repository
             return message;
         }
 
+        public async Task<List<SaleDto>>GetSaleById(int itemID)
+        {
+
+        }
         public async  Task<List<PurchaseReportDto>> GetDailyPurchaseDetails(PurchaseReportDto purchaseReportDto)
         {
 
