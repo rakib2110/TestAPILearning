@@ -283,11 +283,6 @@ namespace Samurai_V2_.Net_8.Repository
             }
             return message;
         }
-
-        public async Task<List<SaleDto>>GetSaleById(int itemID)
-        {
-            return null;
-        }
         public async  Task<List<PurchaseReportDto>> GetDailyPurchaseDetails(PurchaseReportDto purchaseReportDto)
         {
 
@@ -306,6 +301,11 @@ namespace Samurai_V2_.Net_8.Repository
                             }).ToListAsync();
 
             return purchase;
+        }
+
+        public Task<List<SaleDto>> GetSaleByID(int itemid)
+        {
+            throw new NotImplementedException();
         }
     }
 }
